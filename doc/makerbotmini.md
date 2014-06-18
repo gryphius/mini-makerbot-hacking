@@ -1,12 +1,13 @@
 Running network services
 ------------------------
 
-80  : http server
-443 : https server
-9999: json-rpc server
+ - 80  : http server
+ - 443 : https server
+ - 9999: json-rpc server
 
 Extracting the Firmware
 -----------------------
+
  - get the firmware from http://192.168.23.44/firmware/firmware.zip
  - unzip -> contains rootfs (ubifs image)
  - install https://github.com/jrspruitt/ubi_reader and https://github.com/jd-boyd/python-lzo
@@ -14,9 +15,9 @@ Extracting the Firmware
  
 Interesting Files
 -----------------
-/usr/lib/python3.3/site-packages/kaiten/* -> this is the python stuff controlling everything
-/usr/local/apatche/cgi-bin/fcgi_server.py -> the fcgi server code handling /auth and /camera requests
-/etc/httpd.conf -> apache configuration
+ - `/usr/lib/python3.3/site-packages/kaiten/*` -> this is the python stuff controlling everything
+ - `/usr/local/apatche/cgi-bin/fcgi_server.py` -> the fcgi server code handling /auth and /camera requests
+ - `/etc/httpd.conf -> apache configuration`
 
 
 Fcgi Server Oauth
@@ -28,34 +29,48 @@ we claim to be MakerWare, the client_secret can be anything
 
 result:
 
+```
   {"client_id": "MakerWare", "username": "Anonymous", "status": "ok", "answer_code": "<ANSCODE>"}
+```
 
 request authorisation:
 
+```
   http://192.168.23.44/auth?response_type=answer&client_id=MakerWare&answer_code=<ANSCODE>&client_secret=secret
+```
+
 
 as long as we are not authorized, we will get:
 
+```
   {"answer": "pending", "username": "Anonymous"}
-  
+```
+
 The button on the makerbot should be flashing, press it once to authorize the client. Afer that the answer from the above url will be
 
+```
   {"code": "<AUTHCODE>", "username": "Anonymous", "answer": "accepted"}
+```
 
 now we can request a token:
-  
+
+```
   http://192.168.23.44/auth?response_type=token&client_id=MakerWare&context=camera&client_secret=secret&auth_code=<AUTHCODE>
+```
 
 result:
-  
-  {"status": "success", "username": "Anonymous", "access_token": "<ACCESSTOKEN>"}
 
+```
+  {"status": "success", "username": "Anonymous", "access_token": "<ACCESSTOKEN>"}
+```
 
 and finally we can request the camera data:
 
+```
   192.168.23.44/camera?token=<ACCESSTOKEN>
+```
 
-TODO: we get a file at this point, but it looks like the camera hasn't been initialized yet, so we don't get a real image :(
+**TODO**: we get a file at this point, but it looks like the camera hasn't been initialized yet, so we don't get a real image :(
 
 
 JSON-RPC server
@@ -85,11 +100,15 @@ methods:
 example call (telnet 192.168.23.44 9999):
 
 send: 
+
+```
   {"params": {"username": "conveyor", "host_version": "PUT_A_REAL_VERSION_HERE"}, "jsonrpc": "2.0", "method": "handshake", "id": 0}
+```
 
 result:
-  {"result": {"machine_type": "tinkerbell", "pid": 4, "machine_name": "MakerBot Replicator Mini", "iserial": "<serial>", "commit": "30199ba", "vid": 9153, "port": "9999", "builder": "Release_Birdwing_1.0", "ip": null, "firmware_version": {"minor": 1, "build": 100, "major": 1, "bugfix": 0}}, "jsonrpc": "2.0", "id": 0}
-
+```
+{"result": {"machine_type": "tinkerbell", "pid": 4, "machine_name": "MakerBot Replicator Mini", "iserial": "<serial>", "commit": "30199ba", "vid": 9153, "port": "9999", "builder": "Release_Birdwing_1.0", "ip": null, "firmware_version": {"minor": 1, "build": 100, "major": 1, "bugfix": 0}}, "jsonrpc": "2.0", "id": 0}
+```
 
 
 
