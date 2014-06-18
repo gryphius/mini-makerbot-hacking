@@ -11,13 +11,14 @@ Extracting the Firmware
  - get the firmware from http://192.168.23.44/firmware/firmware.zip
  - unzip -> contains rootfs (ubifs image)
  - install https://github.com/jrspruitt/ubi_reader and https://github.com/jd-boyd/python-lzo
- - extract_files.py rootfs -> rootfs will be extracted to output folder
+ - `extract_files.py rootfs` -> rootfs will be extracted to output folder
  
 Interesting Files
 -----------------
  - `/usr/lib/python3.3/site-packages/kaiten/*` -> this is the python stuff controlling everything
+ - `/usr/lib/python3.3/site-packages/bwcamera.py` -> camera access/image decoding
  - `/usr/local/apatche/cgi-bin/fcgi_server.py` -> the fcgi server code handling /auth and /camera requests
- - `/etc/httpd.conf -> apache configuration`
+ - `/etc/httpd.conf` -> apache configuration
 
 
 Fcgi Server Oauth
@@ -25,8 +26,10 @@ Fcgi Server Oauth
 
 we claim to be MakerWare, the client_secret can be anything
 
+```
   http://192.168.23.44/auth?response_type=code&client_id=MakerWare&client_secret=secret
-
+```
+  
 result:
 
 ```
@@ -109,6 +112,13 @@ result:
 ```
 {"result": {"machine_type": "tinkerbell", "pid": 4, "machine_name": "MakerBot Replicator Mini", "iserial": "<serial>", "commit": "30199ba", "vid": 9153, "port": "9999", "builder": "Release_Birdwing_1.0", "ip": null, "firmware_version": {"minor": 1, "build": 100, "major": 1, "bugfix": 0}}, "jsonrpc": "2.0", "id": 0}
 ```
+
+Image decoding
+--------------
+
+- TODO: the bot seems to use 'libyuv2jpg.so' to decode the image - where do we get this?
+ - alternative: try to access save_jpeg over jsonrpc and then pull the image from http server?
+
 
 
 
