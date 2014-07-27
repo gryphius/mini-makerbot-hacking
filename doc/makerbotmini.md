@@ -116,7 +116,7 @@ result:
 Image decoding
 --------------
 
-- TODO: the bot seems to use 'libyuv2jpg.so' to decode the image - where do we get this?
+- TODO: the bot seems to use 'libyuv2jpg.so' to decode the image - https://code.google.com/p/libyuv/
  - alternative: try to access save_jpeg over jsonrpc and then pull the image from http server?
 
 
