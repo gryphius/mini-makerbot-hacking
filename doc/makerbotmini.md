@@ -73,7 +73,7 @@ and finally we can request the camera data:
   192.168.23.44/camera?token=<ACCESSTOKEN>
 ```
 
-**TODO**: we get a file at this point, but it looks like the camera hasn't been initialized yet, so we don't get a real image :(
+At this point, you need to decode the image. See Image decoding section for more info.
 
 
 JSON-RPC server
@@ -116,9 +116,28 @@ result:
 Image decoding
 --------------
 
-- TODO: the bot seems to use 'libyuv2jpg.so' to decode the image - https://code.google.com/p/libyuv/
+The webcam in the Makerbot 5th Gen's is a YUYV V4L2 compatible camera. The server responds with a Python struct which you have to unpack to get a proper image out of.
+
+The following code will extract the YUV image from the struct returned from the server and save it to a file called image.yuv:
+
+import ctypes
+import struct
+total_blob_size, image_width, image_height, pixel_format, latest_cached_image = struct.unpack('!IIII{0}s'.format(len(data) - ctypes.sizeof(ctypes.c_uint32 * 4)), data)
+f = open('image.yuv')
+f.write(latest_cached_image)
+f.close()
+
+- TODO: Figure out how to convert YUV to JPEG possibly using https://code.google.com/p/libyuv/ or more preferably a native Python library.
  - alternative: try to access save_jpeg over jsonrpc and then pull the image from http server?
+   - (n-i-x) According to bwcamera.py:
+       save_jpeg will attempt to encode the current frame to a jpeg and save
+       it to the supplied path on the filesystem.  This is CPU intensive and
+       should not be done frequently (or really at all) during a print.
+       If the python interpreter segfaults, it's probably because of
+       the yuv2jpeg library.
 
-
+     I think we have what we need at this point to convert the images to whatever format we need without calling save_jpeg
+- TODO: Figure out how to increase the image size from 320x240 to something a bit more high-res
+- TODO: Figure out how to access the live-stream instead of cached frames
 
 
