@@ -120,12 +120,14 @@ The webcam in the Makerbot 5th Gen's is a YUYV V4L2 compatible camera. The serve
 
 The following code will extract the YUV image from the struct returned from the server and save it to a file called image.yuv:
 
+```python
 import ctypes
 import struct
 total_blob_size, image_width, image_height, pixel_format, latest_cached_image = struct.unpack('!IIII{0}s'.format(len(data) - ctypes.sizeof(ctypes.c_uint32 * 4)), data)
 f = open('image.yuv')
 f.write(latest_cached_image)
 f.close()
+```
 
 - TODO: Figure out how to convert YUV to JPEG possibly using https://code.google.com/p/libyuv/ or more preferably a native Python library.
  - alternative: try to access save_jpeg over jsonrpc and then pull the image from http server?
