@@ -132,6 +132,18 @@ f.close()
 decoding the image:
 see jeff's code in the lib https://github.com/gryphius/makerbot-gen5-api/blob/master/python/makerbotapi/makerbotapi.py
 
+Printer discovery
+-----------------
+the client sends a UDP broadcast from sourceport 12309 to port 12307 with the following content:
+
+```
+{"command": "broadcast"}
+```
+
+the makerbot sends a response to port 12308:
+```
+{"commit": "d3250f6", "firmware_version": {"major": 1, "minor": 3, "bugfix": 0, "build": 131}, "vid": 9153, "ip": "192.168.23.44", "machine_type": "tinkerbell", "machine_name": "MakerBot Replicator Mini", "builder": "Release_Birdwing_1.0", "pid": 4, "iserial": "XXXXXXXXXXXXXXXXXXXX", "port": "9999"}
+```
 
 
 
