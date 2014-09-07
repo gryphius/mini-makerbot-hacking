@@ -129,17 +129,10 @@ f.write(latest_cached_image)
 f.close()
 ```
 
-- TODO: Figure out how to convert YUV to JPEG possibly using https://code.google.com/p/libyuv/ or more preferably a native Python library.
- - alternative: try to access save_jpeg over jsonrpc and then pull the image from http server?
-   - (n-i-x) According to bwcamera.py:
-       save_jpeg will attempt to encode the current frame to a jpeg and save
-       it to the supplied path on the filesystem.  This is CPU intensive and
-       should not be done frequently (or really at all) during a print.
-       If the python interpreter segfaults, it's probably because of
-       the yuv2jpeg library.
+decoding the image:
+see jeff's code in the lib https://github.com/gryphius/makerbot-gen5-api/blob/master/python/makerbotapi/makerbotapi.py
 
-     I think we have what we need at this point to convert the images to whatever format we need without calling save_jpeg
-- TODO: Figure out how to increase the image size from 320x240 to something a bit more high-res
-- TODO: Figure out how to access the live-stream instead of cached frames
+
+
 
 
