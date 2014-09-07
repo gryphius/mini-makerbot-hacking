@@ -44,7 +44,7 @@ def call_jsonrpc(method,params):
   print ""
   print "jsonrpc request :%s"%jsoncontent
   rpcsocket.sendall(jsoncontent)
-  rcv=rpcsocket.recv(1024)
+  rcv=rpcsocket.recv(2048)
   print "jsonrpc response: %s"%rcv
   print ""
   return rcv
@@ -61,7 +61,7 @@ if __name__=='__main__':
   AUTH_CODE=None 
   
   #put AUTH_CODE here to skip authentication step
-  #AUTH_CODE="CTkNHoyrASpaMJfccOwQIzRuvpHhNpbB"
+  AUTH_CODE="CTkNHoyrASpaMJfccOwQIzRuvpHhNpbB"
   
   rpcsocket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
   rpcsocket.connect((host,jsonrpcport),)
@@ -107,7 +107,7 @@ if __name__=='__main__':
  
   #now we should be able to call privileged methods
   #actually works.. but can't see the picture - what would the correct path be?
-  #call_jsonrpc("capture_image",dict(username="conveyor", output_file="/home/logs/test.jpg"))
+  call_jsonrpc("get_system_information",dict(username="conveyor"))
   
 
 
